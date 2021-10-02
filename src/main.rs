@@ -303,7 +303,43 @@ fn test_data_types() {
     test_custom_types();
 }
 
+fn test_variable_bindings() {
+    //mutable
+    let mut mutable_variable = 1;
+    let immutable_variable = 2;
+    //we can change mut variables after initialized,but immutable variable
+    mutable_variable = 3;
+    //immutable_variable=4;//error
+
+    //scope and shadows
+    let scoped_variable = 1;
+    {
+        let scoped_variable = '2';
+        println!("shadowed: {:?}", scoped_variable);
+    }
+    println!("scoped: {:?}", scoped_variable);
+
+    //declare first
+    let declared_variable = 1;
+    println!("declared: {:?}", declared_variable);
+    //let unknown_variable;//to be safe,you must initialize this variable
+    //println!("unknown_variable: {:?}", unknown_variable);//compile error,even we give it a type
+
+    //freezing variable
+    let mut freezing_variable = 1;
+    {
+        //after this statement,the variable is frozen in this scope
+        let freezing_variable = 2;
+        //freezing_variable=3;//we cannot assigned a value to it
+    }
+    //out the scope,assignment is ok.
+    freezing_variable = 3;
+    println!("{:?}", freezing_variable);
+}
+
 fn main() {
     test_data_types();
+    test_variable_bindings();
+
     println!("Hello, world!");
 }
