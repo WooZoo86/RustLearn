@@ -150,12 +150,12 @@ fn test_compound_types() {
     let var_tuple = (1, 2u32, 3.0f32, 4.0123f64, 'b', true, ()); //different element type, but limited elements
     println!("{:?}", var_tuple);
     println!("tuple.0={}", var_tuple.0); //access member by indicate it's position
-                                         //destruct tuple
+    //destruct tuple
     let (x, y, z, i, j, k, m) = var_tuple;
     println!("x->{},j->{}", x, j);
     //be careful on empty tuple,if tuple get one element,you should add , followed it
     let var_empty = ();
-    let var_one_element = (1,);
+    let var_one_element = (1, );
     println!(
         "empty tuple->{:?},one element tuple->{:?}",
         var_empty, var_one_element
@@ -185,7 +185,7 @@ fn test_compound_types() {
     println!("{:?}", &var_target[1..=4]); //except index 0
     let var_string = ["1", "2", "3", "4"];
     println!("{:?}", &var_string[1..=3]); //except index 0
-                                          //mut slice can change value
+    //mut slice can change value
     let var_slice = &mut var_target;
     var_slice.fill(0);
     var_slice[1] = 2;
@@ -468,17 +468,17 @@ fn test_type_misc() {
     let a_float = 3.1415;
     //let a_integer: i8 = a_float;//we cannot directly cast to different types,no implicit conversion
     let a_integer = a_float as i8; //this is ok,we explicit the type
-                                   //let a_character = a_float as char;//invalid cast,cannot directly cast float/double to char.
-                                   //when casting any value to unsigned type,make fits into the new type
+    //let a_character = a_float as char;//invalid cast,cannot directly cast float/double to char.
+    //when casting any value to unsigned type,make fits into the new type
     println!("1234 as u8->{}", 1234 as u8); //like 1234%256 in c language
-                                            //but when significant is 1,it get truncated
+    //but when significant is 1,it get truncated
     println!("-2 as u8->{}", (-2i8) as u8);
     //when casting to a signed type,if the significant bit is 1,then value is negative
     println!("128 as i8->{}", 128 as i8);
     //saturating casting.when casting from float to int,if the float exceeds the upper bound or lower bound,then value is the bound value
     println!("300.12 as u8->{}", 300.12_f32 as u8); //255
     println!("-100.22 as u8->{}", -100.22_f32 as u8); //0;
-                                                      //use unsafe methods to make a real casting,but the value might overflow or return "unsound value",be careful to use.
+    //use unsafe methods to make a real casting,but the value might overflow or return "unsound value",be careful to use.
     unsafe {
         println!("300.12 as u8->{}", 300.12_f32.to_int_unchecked::<u8>());
         println!("-100.22 as u8->{}", (-100.22_f32).to_int_unchecked::<u8>());
@@ -535,10 +535,30 @@ fn test_type_misc() {
     println!("circle: {:?}", circle);
 }
 
+fn test_expressions_and_statements() {
+    //there are so many statements in rust
+    //statements are made up of expressions
+    //when CPU run into function,then goes into block and scope statements,
+    //CPU will execute expressions and check next character whether it is a semicolon,
+    //if it is a semicolon,CPU continues executing until it get a expression value without semicolon,
+    //the value is the statement or function return value
+    let x = 2u32;//statement
+    x;//still a statement
+    x + 1;
+    12;
+    let y = {//assigned by a block which return a value of the expression "x+square"
+        let x = 3;
+        let square = x * x;
+        x + square
+    };
+    println!("y ={}", y)
+}
+
 fn main() {
     test_data_types();
     test_variable_bindings();
     test_type_misc();
+    test_expressions_and_statements();
 
     println!("Hello, world!");
 }
