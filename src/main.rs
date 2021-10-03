@@ -542,11 +542,12 @@ fn test_expressions_and_statements() {
     //CPU will execute expressions and check next character whether it is a semicolon,
     //if it is a semicolon,CPU continues executing until it get a expression value without semicolon,
     //the value is the statement or function return value
-    let x = 2u32;//statement
-    x;//still a statement
+    let x = 2u32; //statement
+    x; //still a statement
     x + 1;
     12;
-    let y = {//assigned by a block which return a value of the expression "x+square"
+    let y = {
+        //assigned by a block which return a value of the expression "x+square"
         let x = 3;
         let square = x * x;
         x + square
@@ -578,7 +579,7 @@ fn test_flow_control() {
     //assigned by a if-else statement
     let n = 4;
     let big_num = if n < 3 || n > 3 {
-        n + n//expression
+        n + n //expression
     } else {
         n * n
     };
@@ -600,15 +601,15 @@ fn test_flow_control() {
             'third: loop {
                 println!("third loop counter: {:?}", loop_counter);
                 loop_counter += 1;
-                break 'top;//goto the label
+                break 'top; //goto the label
             }
         }
-    };
+    }
     loop_counter = 0;
     let loop_result = loop {
         loop_counter += 1;
         if loop_counter == 10 {
-            break loop_counter * 2;//return a value
+            break loop_counter * 2; //return a value
         }
     };
     println!("loop result: {:?}", loop_result);
@@ -623,20 +624,23 @@ fn test_flow_control() {
     }
 
     //for loop:range based or iterator based
-    for n in 1..101 {//not include 101,use 1..=101,like slice
+    for n in 1..101 {
+        //not include 101,use 1..=101,like slice
         if n % 2 == 0 {
             println!("odd number find:{}", n);
         }
     }
     let names = vec!["bob", "frank", "mars"];
-    for name in names.iter() {//this way we can use elements after.
+    for name in names.iter() {
+        //this way we can use elements after.
         match name {
             &"frank" => println!("hello frank"),
             _ => println!("who is {}?", name),
         }
     }
     println!("names:{:?}", names);
-    for name in names.into_iter() {//this way elements no longer available.
+    for name in names.into_iter() {
+        //this way elements no longer available.
         match name {
             "bob" => println!("hello bob"),
             _ => println!("who is {}?", name),
@@ -644,7 +648,8 @@ fn test_flow_control() {
     }
     //println!("names:{:?}", names);//this will make a error
     let mut names = vec!["bob", "frank", "mars"];
-    for name in names.iter_mut() {//this way we can change element
+    for name in names.iter_mut() {
+        //this way we can change element
         *name = match name {
             &mut "mars" => "harris",
             _ => "some one",
@@ -748,12 +753,242 @@ fn test_flow_control() {
     }
 }
 
+fn test_normal_function(x: i32, y: String) -> usize {
+    if x == 2 {
+        return y.len(); //return by "return" key word
+    } else {
+        y.len() % 2 //return by expression value.
+    }
+}
+
+#[derive(Debug)]
+struct Point {
+    x: f64,
+    y: f64,
+}
+
+impl Point {
+    //associated functions
+    fn origin() -> Point {
+        Point { x: 0.0, y: 0.0 }
+    }
+    fn new(x: f64, y: f64) -> Point {
+        Point { x, y }
+    }
+
+    //methods
+    fn size(&self) -> f64 {
+        self.x * self.y
+    }
+    fn translate(&mut self, x: f64, y: f64) {
+        self.x += x;
+        self.y += y;
+    }
+}
+
+fn test_associated_functions() {
+    let point_org = Point::origin();
+    println!("point_org: {:?}", point_org);
+    let point_new = Point::new(2.1, 1.2);
+    println!("point_new: {:?}", point_new);
+}
+
+fn test_methods() {
+    let mut method_point = Point::origin();
+    println!("method_point size: {:?}", method_point.size());
+    method_point.translate(3.0, 4.0);
+    println!("method_point translate: {:?}", method_point);
+}
+
+fn test_closure_capture() {
+    //by reference &T
+    let color = String::from("red");
+    let print = || println!("color: {:?}", color);//borrow from color
+    print();
+    let _reborrow = &color;//can be borrowed from color only with immutable reference;
+    print();//no error here
+    let _moved_color = color;//here is ok when ypu never call "print()" after.
+
+    //by mutable reference &mut T
+    let mut count = 0;
+    let mut inc = || {
+        count += 1;
+        println!("inc: {:?}", count);
+    };
+    inc();
+    let _count_borrowed = &mut count;//ok,do not call "inc" after
+    //inc();//make error
+
+    //by value
+    use std::mem;
+    let movable = Box::new(3);
+    let consume = || {
+        println!("movable: {:?}", movable);
+        mem::drop(movable);
+    };
+
+    //we can specific the "move" to the closure
+    let numbers = vec![1, 2, 3, 4, 5, 6];
+    let contains = move |x| numbers.contains(x);
+    println!("contains 1: {:?}", contains(&1));
+    println!("contains 4: {:?}", contains(&4));
+}
+
+use std::mem;
+
+fn test_closure_as_input_parameter() {
+    //by value T
+    fn apply<F>(callback: F) where F: FnOnce() {
+        callback();
+    }
+    //by reference &T, if want modified value use &mut T
+    fn apply_to_3<F>(callback: F) -> i32 where F: Fn(i32) -> i32 {
+        callback(3)
+    }
+
+    let greeting = "hello";
+    let mut farewell = "goodbye".to_owned();
+    let diary = || {
+        println!("I saied {}", greeting);//by reference
+        farewell.push_str("!!!");
+        println!("Then I screamed {}", farewell);//by value
+        println!("Now I can sleep");
+        mem::drop(farewell);//free the memory
+    };
+
+    apply(diary);
+    fn function() {
+        println!("this function satisfied the 'Fn' bound");
+    }
+    apply(function);//function can be used if suitable for the signature
+    let double = |x| 2 * x;
+    println!("3 double {}", apply_to_3(double));
+}
+
+fn test_closure_as_output_parameter() {
+    fn create_fn() -> impl Fn() {
+        let text = "Fn".to_owned();
+        move || println!("This is a:{}", text)
+    }
+    fn create_fnmut() -> impl FnMut() {
+        let text = "FnMut".to_owned();
+        move || println!("This is a:{}", text)
+    }
+    fn create_fnonce() -> impl FnOnce() {
+        let text = "FnOnce".to_owned();
+        move || println!("This is a:{}", text)
+    }
+
+    let fn_plain = create_fn();
+    let mut fn_mut = create_fnmut();
+    let fn_once = create_fnonce();
+    fn_plain();
+    fn_mut();
+    fn_once();
+}
+
+fn test_closures() {
+    fn increase(i: i32) -> i32 {
+        i + 1
+    } //nested function
+    let closure_annotated = |i: i32| -> i32 { i + 1 }; //lambdas with type specified
+    let closure_inferred = |i| i + 1; //type inferred
+    let i = 1;
+    println!("increase ={}", increase(i));
+    let i = closure_annotated(i);
+    println!("closure_annotated ={}", i);
+    let i = closure_inferred(i);
+    println!("closure_inferred ={}", i);
+
+    //no arguments
+    let one = || 1;
+    println!("one ={}", one());
+
+    //capturing arguments
+    test_closure_capture();
+
+    //as input parameter
+    test_closure_as_input_parameter();
+    //as output parameter
+    test_closure_as_output_parameter();
+}
+
+fn empty() {
+    ()
+}
+
+fn diverging() -> ! {
+    panic!("this call will never returns");
+}
+
+fn test_diverging_function() {
+    //diverging function never return,marked using !,which is an empty type,not "()"
+    empty();
+    println!("you will see this line");
+    diverging();
+    println!("never come to this line");
+}
+
+fn is_odd(n: u32) -> bool {
+    n % 2 == 1
+}
+
+fn test_hof_function() {
+    //function flow
+    let upper = 1000;
+    let mut sum = 0;
+    for i in 0.. {
+        let n_squared = i * i;
+        if n_squared >= upper {
+            break;
+        } else if is_odd(i) {
+            sum += n_squared;
+        }
+    }
+    println!("acc: {}", sum);
+    //functional approach
+    let sum_of_squared_odd_numbers: u32 = (0..)
+        .map(|n| n * n)
+        .take_while(|&n_squared| n_squared < upper)
+        .filter(|&n_squared| is_odd(n_squared))
+        .fold(0, |acc, n_squared| acc + n_squared);
+    println!("sum_of_squared_odd_numbers:{}", sum_of_squared_odd_numbers);
+}
+
+fn test_function_and_method() {
+    //Functions are declared using the fn keyword. Its arguments are type annotated, just like variables, and, if the function returns a value,
+    // the return type must be specified after an arrow ->.
+    //The final expression in the function will be used as return value. Alternatively, the return statement can be used to return a value earlier from within the function,
+    // even from inside loops or if statements.
+    test_after_define();
+    test_normal_function(3, String::from("hello"));
+
+    //associated function are related to type,like static functions in c/c++
+    test_associated_functions();
+    //methods are related to instance.
+    test_methods();
+    //closures like functions,but more similar lambdas in c/c++
+    test_closures();
+
+    //one or more function/procedure called by each other
+    test_hof_function();
+
+    //never return to this call function
+    test_diverging_function();
+}
+
+fn test_after_define() {
+    println!("in rust no need to define a function before the function called");
+    println!("when return type is (),it can be omitted");
+}
+
 fn main() {
     test_data_types();
     test_variable_bindings();
     test_type_misc();
     test_expressions_and_statements();
     test_flow_control();
+    test_function_and_method();
 
-    println!("Hello, world!");
+    println!("Hello rust!");
 }
