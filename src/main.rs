@@ -554,11 +554,206 @@ fn test_expressions_and_statements() {
     println!("y ={}", y)
 }
 
+fn test_flow_control() {
+    //if-else
+    let cmp = 3;
+    //single flow
+    if cmp < 4 {
+        println!("cmp <4:");
+    }
+    //with else
+    if cmp > 4 {
+        println!("cmp>4");
+    } else {
+        println!("cmp<=4");
+    }
+    //with multiply else if
+    if cmp < 3 {
+        println!("cmp<3");
+    } else if cmp == 3 {
+        println!("cmp=3");
+    } else {
+        println!("cmp>3");
+    }
+    //assigned by a if-else statement
+    let n = 4;
+    let big_num = if n < 3 || n > 3 {
+        n + n//expression
+    } else {
+        n * n
+    };
+    println!("big_num:{}", big_num);
+
+    //loop:no condition to check,control by "continue" or "break","break" can return a value or goto a label,
+    //when return a value,all branches must return the same type value
+    //also we can embed loops
+    let mut loop_counter = 0;
+    'top: loop {
+        println!("top loop counter: {:?}", loop_counter);
+        loop_counter += 1;
+        'second: loop {
+            println!("second loop counter: {:?}", loop_counter);
+            loop_counter += 1;
+            if loop_counter == 4 {
+                continue;
+            }
+            'third: loop {
+                println!("third loop counter: {:?}", loop_counter);
+                loop_counter += 1;
+                break 'top;//goto the label
+            }
+        }
+    };
+    loop_counter = 0;
+    let loop_result = loop {
+        loop_counter += 1;
+        if loop_counter == 10 {
+            break loop_counter * 2;//return a value
+        }
+    };
+    println!("loop result: {:?}", loop_result);
+
+    //while
+    loop_counter = 0;
+    while loop_counter < 10 {
+        if loop_counter % 2 == 0 {
+            println!("odd number find:{}", loop_counter);
+        }
+        loop_counter += 1;
+    }
+
+    //for loop:range based or iterator based
+    for n in 1..101 {//not include 101,use 1..=101,like slice
+        if n % 2 == 0 {
+            println!("odd number find:{}", n);
+        }
+    }
+    let names = vec!["bob", "frank", "mars"];
+    for name in names.iter() {//this way we can use elements after.
+        match name {
+            &"frank" => println!("hello frank"),
+            _ => println!("who is {}?", name),
+        }
+    }
+    println!("names:{:?}", names);
+    for name in names.into_iter() {//this way elements no longer available.
+        match name {
+            "bob" => println!("hello bob"),
+            _ => println!("who is {}?", name),
+        }
+    }
+    //println!("names:{:?}", names);//this will make a error
+    let mut names = vec!["bob", "frank", "mars"];
+    for name in names.iter_mut() {//this way we can change element
+        *name = match name {
+            &mut "mars" => "harris",
+            _ => "some one",
+        }
+    }
+    println!("names:{:?}", names);
+
+    //match
+    let choice = 10;
+    match choice {
+        1 => println!("the one"),
+        2 | 3 | 5 | 7 => println!("these are primes"),
+        8..=9 => println!("numbers i don't understand"),
+        _ => println!("all the rests"),
+    }
+    //assigned by match
+    let color_index = 0;
+    let color = match color_index {
+        1 => "red",
+        2 => "black",
+        3 => "white",
+        _ => "unknown color",
+    };
+    println!("color: {:?}", color);
+    //destruct match
+    //can use to destruct tuple\enum\struct\pointer\ref
+    let triple = (0, 1, 2);
+    match triple {
+        (0, x, y) => println!("x:{},y{}", x, y),
+        (1, ..) => println!("start with 1"),
+        _ => println!("we don't care"),
+    }
+    //pointer & reference
+    let reference = &3;
+    match reference {
+        &val => println!("reference:{}", val),
+    }
+    match *reference {
+        val => println!("val:{}", val),
+    }
+    let value = 3;
+    let mut mut_value = 5;
+    match value {
+        ref r => println!("a reference to value{:?}", r),
+    }
+    match mut_value {
+        ref mut m => {
+            *m += 10;
+            println!("mut value add 10:{}", m);
+        }
+    }
+    //guard math
+    let pair = (2, -2);
+    match pair {
+        (x, y) if x == y => println!("twins"),
+        (x, y) if x + y == 0 => println!("antimatter"),
+        (x, _) if x % 2 == 1 => println!("odd"),
+        _ => println!("no matter"),
+    }
+    //binding match
+    let age = 23;
+    match age {
+        0 => println!("not bored"),
+        child @ 1..=12 => println!("child age: {}", child),
+        teen @ 13..=19 => println!("teen age: {}", teen),
+        adult @ 20..=100 => println!("adult age: {}", adult),
+        _ => println!("monster"),
+    }
+
+    //if-let:sometimes we dont want to write complex math cases,use if-let simply
+    let number = Some(7);
+    let letter: Option<i32> = None;
+    let emotion: Option<i32> = None;
+    if let Some(i) = number {
+        println!("number: {}", i);
+    }
+    if let Some(i) = letter {
+        println!("letter: {}", i);
+    } else {
+        println!("it is a letter");
+    }
+    let is_letter = false;
+    if let Some(i) = emotion {
+        println!("emotion: {}", i);
+    } else if is_letter {
+        println!("it is a letter");
+    } else {
+        println!("it is a emotion");
+    }
+
+    //while-let:like if-let,just simplify match cases
+    let mut optional = Some(0);
+    while let Some(i) = optional {
+        if i > 9 {
+            println!("9 is too big,so we quit");
+            optional = None;
+        } else {
+            println!("continue on");
+            optional = Some(i + 1);
+        }
+    }
+}
+
 fn main() {
     test_data_types();
     test_variable_bindings();
     test_type_misc();
     test_expressions_and_statements();
+    test_flow_control();
 
     println!("Hello, world!");
 }
