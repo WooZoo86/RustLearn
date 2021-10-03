@@ -5,8 +5,11 @@ fn test_integer_types() {
     let var_i32 = 3i32;
     let var_i64 = 4i64;
     let var_i128 = 5i128;
-    let var_isize = 0isize;//pointer size, likely to be 32bit or 64bit depends on platform os
-    println!("signe integer->{},{},{},{},{},{}", var_i8, var_i16, var_i32, var_i64, var_i128, var_isize);
+    let var_isize = 0isize; //pointer size, likely to be 32bit or 64bit depends on platform os
+    println!(
+        "signe integer->{},{},{},{},{},{}",
+        var_i8, var_i16, var_i32, var_i64, var_i128, var_isize
+    );
 
     //unsigned integer
     let var_u8 = 6u8;
@@ -14,29 +17,41 @@ fn test_integer_types() {
     let var_u32 = 8u32;
     let var_u64 = 9u64;
     let var_u128 = 110u128;
-    let var_usize = 14usize;//pointer size
-    println!("unsigned integer->{},{},{},{},{},{}", var_u8, var_u16, var_u32, var_u64, var_u128, var_usize);
+    let var_usize = 14usize; //pointer size
+    println!(
+        "unsigned integer->{},{},{},{},{},{}",
+        var_u8, var_u16, var_u32, var_u64, var_u128, var_usize
+    );
 
-    let var_default = 1;//default integer type is i32
-    let var_specific: i16 = 2;//we can specific it type
-    println!("default integer->{},specific integer->{}", var_default, var_specific);
+    let var_default = 1; //default integer type is i32
+    let var_specific: i16 = 2; //we can specific it type
+    println!(
+        "default integer->{},specific integer->{}",
+        var_default, var_specific
+    );
 
     //use const value,but must specific const type
     const AGE: i32 = 32;
     let var_age = AGE;
-    println!("const integer->{},const initialed integer->{}", AGE, var_age);
+    println!(
+        "const integer->{},const initialed integer->{}",
+        AGE, var_age
+    );
 
     //use literal value
-    let var_hex = 0x10;//hex
-    let var_bin = 0b1100_1100;//binary also can be 0b11001100
-    let var_oct = 0o123;//octal
-    let var_decimal = 123_456;//decimal also can be 123456
-    let var_byte = b'a';//byte for u8 only
-    println!("literal initialed integer->{},{},{},{},{}", var_hex, var_bin, var_oct, var_decimal, var_byte);
+    let var_hex = 0x10; //hex
+    let var_bin = 0b1100_1100; //binary also can be 0b11001100
+    let var_oct = 0o123; //octal
+    let var_decimal = 123_456; //decimal also can be 123456
+    let var_byte = b'a'; //byte for u8 only
+    println!(
+        "literal initialed integer->{},{},{},{},{}",
+        var_hex, var_bin, var_oct, var_decimal, var_byte
+    );
 
     //if you want change variable value,define mut variable
-    let mut age = AGE;//caution:we define a new variable to override the preview variable
-    age = 18;//we can chang it value
+    let mut age = AGE; //caution:we define a new variable to override the preview variable
+    age = 18; //we can chang it value
     println!("mut integer->{}", age);
 }
 
@@ -55,7 +70,14 @@ fn test_float_types() {
     println!("f32->i8:{}", 259.02_f32 as i8);
 
     //float range
-    println!("float->max:{},min:{},nan:{},infinity:{},neg_infinity:{}", f32::MAX, f32::MIN, f32::NAN, f32::INFINITY, f32::NEG_INFINITY);
+    println!(
+        "float->max:{},min:{},nan:{},infinity:{},neg_infinity:{}",
+        f32::MAX,
+        f32::MIN,
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY
+    );
 }
 
 fn test_char_types() {
@@ -70,7 +92,10 @@ fn test_char_types() {
     //escape character
     let var_escape = '\n';
     let var_escape_hex = '\x67';
-    println!("ascii->{},unicode->{},escape->{},{}", var_ascii, var_unicode, var_escape, var_escape_hex);
+    println!(
+        "ascii->{},unicode->{},escape->{},{}",
+        var_ascii, var_unicode, var_escape, var_escape_hex
+    );
 
     //type cast
     println!("char->i32:{:x}", '\x67' as i32);
@@ -100,34 +125,45 @@ fn test_scalar_types() {
 fn test_compound_types() {
     /************* compound types *******************/
     //array:fixed length,same type,can not changed value
-    let var_array = [0, 1, 2, 3, 4];//five i32 element
-    let var_array_initial = [1; 10];//10 element of 1
+    let var_array = [0, 1, 2, 3, 4]; //five i32 element
+    let var_array_initial = [1; 10]; //10 element of 1
     println!("var_array->{:?},length->{:?}", var_array, var_array.len());
-    println!("var_array_initial->{:?},length->{:?}", var_array_initial, var_array_initial.len());
+    println!(
+        "var_array_initial->{:?},length->{:?}",
+        var_array_initial,
+        var_array_initial.len()
+    );
     //mut array can change element value but type and length
     let mut var_target = [2; 5];
-    var_target[0] = 3;//do not access element out of bound
-    println!("var_target->{:?},length->{:?}", var_target, var_target.len());
+    var_target[0] = 3; //do not access element out of bound
+    println!(
+        "var_target->{:?},length->{:?}",
+        var_target,
+        var_target.len()
+    );
     //rust don not have VLA yet,so we use vec as dynamic array
     let mut var_dynamic = vec![1, 2, 3, 4];
     var_dynamic.push(5);
     println!("dynamic array->{:?}", var_dynamic);
 
     //tuple
-    let var_tuple = (1, 2u32, 3.0f32, 4.0123f64, 'b', true, ());//different element type, but limited elements
+    let var_tuple = (1, 2u32, 3.0f32, 4.0123f64, 'b', true, ()); //different element type, but limited elements
     println!("{:?}", var_tuple);
-    println!("tuple.0={}", var_tuple.0);//access member by indicate it's position
-    //destruct tuple
+    println!("tuple.0={}", var_tuple.0); //access member by indicate it's position
+                                         //destruct tuple
     let (x, y, z, i, j, k, m) = var_tuple;
     println!("x->{},j->{}", x, j);
     //be careful on empty tuple,if tuple get one element,you should add , followed it
     let var_empty = ();
-    let var_one_element = (1, );
-    println!("empty tuple->{:?},one element tuple->{:?}", var_empty, var_one_element);
+    let var_one_element = (1,);
+    println!(
+        "empty tuple->{:?},one element tuple->{:?}",
+        var_empty, var_one_element
+    );
 
     //range
-    assert_eq!((1..5), std::ops::Range { start: 1, end: 5 });//not include 5
-    assert_eq!((1..=5), std::ops::RangeInclusive::new(1, 5));//include 5
+    assert_eq!((1..5), std::ops::Range { start: 1, end: 5 }); //not include 5
+    assert_eq!((1..=5), std::ops::RangeInclusive::new(1, 5)); //include 5
     println!("sum->{:?}", (1..10).sum::<i32>());
     assert_eq!(1 + 2 + 3 + 4, (1..5).sum());
     //range iterator
@@ -142,14 +178,14 @@ fn test_compound_types() {
 
     //slice
     let mut var_target = [1, 2, 3, 4, 5];
-    println!("{:?}", &var_target[..]);//all
-    println!("{:?}", &var_target[1..]);//except index 0
-    println!("{:?}", &var_target[..4]);//except index 4
-    println!("{:?}", &var_target[1..4]);//except index 0 and 4
-    println!("{:?}", &var_target[1..=4]);//except index 0
+    println!("{:?}", &var_target[..]); //all
+    println!("{:?}", &var_target[1..]); //except index 0
+    println!("{:?}", &var_target[..4]); //except index 4
+    println!("{:?}", &var_target[1..4]); //except index 0 and 4
+    println!("{:?}", &var_target[1..=4]); //except index 0
     let var_string = ["1", "2", "3", "4"];
-    println!("{:?}", &var_string[1..=3]);//except index 0
-    //mut slice can change value
+    println!("{:?}", &var_string[1..=3]); //except index 0
+                                          //mut slice can change value
     let var_slice = &mut var_target;
     var_slice.fill(0);
     var_slice[1] = 2;
@@ -203,7 +239,15 @@ struct Student {
 
 fn test_struct_types() {
     //normal variable cannot be modified
-    let xiaohua: Student = Student { name: String::from("xiaohua"), age: 14, sex: Gender::Female, weight: 1.55, height: 43.2, class: Class(String::from("yiban"), 1, 50), favorite: Favorite };//initial list must indicate the member name of the element.
+    let xiaohua: Student = Student {
+        name: String::from("xiaohua"),
+        age: 14,
+        sex: Gender::Female,
+        weight: 1.55,
+        height: 43.2,
+        class: Class(String::from("yiban"), 1, 50),
+        favorite: Favorite,
+    }; //initial list must indicate the member name of the element.
     println!("xiaohua->{:?}", xiaohua);
 
     //define const must special it type
@@ -219,11 +263,22 @@ fn test_struct_types() {
 
     //we don't want indicate the name of element, so we use above variable to initial a student
     //let lileifull=Student{name:name,age:age,sex:sex,weight:weight,height:height};//stupid to use  this statement
-    let lilei = Student { name, age, sex, weight, height, class, favorite };
+    let lilei = Student {
+        name,
+        age,
+        sex,
+        weight,
+        height,
+        class,
+        favorite,
+    };
     println!("lilei->{:?}", lilei);
 
     //mut variable can be modified, and we use the rest element of xiaohua to initial xiaoming
-    let mut xiaoming: Student = Student { name: String::from("xiaoming"), ..xiaohua };
+    let mut xiaoming: Student = Student {
+        name: String::from("xiaoming"),
+        ..xiaohua
+    };
     xiaoming.name = String::from("xiaoming");
     xiaoming.age = 18;
     xiaoming.sex = Gender::Male;
@@ -235,9 +290,20 @@ fn test_struct_types() {
     println!("xiaoming->{:?}", xiaoming);
 
     //we can destruct and get some element value
-    let Student { name, age, sex, weight, height, class, favorite } = xiaoming;
+    let Student {
+        name,
+        age,
+        sex,
+        weight,
+        height,
+        class,
+        favorite,
+    } = xiaoming;
     //let Student { name:name, age:age, sex:sex, weight:weight, height:height, class:class, favorite:favorite } = xiaoming;//stupid to use  this statement
-    println!("destruct xiaoming->{:?},{:?},{:?},{:?},{:?},{:?},{:?}", name, age, sex, weight, height, class, favorite);
+    println!(
+        "destruct xiaoming->{:?},{:?},{:?},{:?},{:?},{:?},{:?}",
+        name, age, sex, weight, height, class, favorite
+    );
 }
 
 //no parameter enum
@@ -286,7 +352,7 @@ fn test_enum_types() {
     }
 
     //c style enum
-    println!("weekday->{}", WeekDay::Thursday as i32);//we can cast type cos it has a integer value
+    println!("weekday->{}", WeekDay::Thursday as i32); //we can cast type cos it has a integer value
 
     //with parameter enum
     let add = Operations::Add { x: 3, y: 2 };
@@ -337,9 +403,142 @@ fn test_variable_bindings() {
     println!("{:?}", freezing_variable);
 }
 
+#[derive(Debug)]
+struct Numbers {
+    max: i32,
+    min: i32,
+}
+
+impl From<i32> for Numbers {
+    fn from(value: i32) -> Self {
+        Numbers {
+            max: value,
+            min: value,
+        }
+    }
+}
+
+use std::convert::TryFrom;
+use std::convert::TryInto;
+
+#[derive(Debug, PartialEq)]
+struct EventNumber(i32);
+
+impl TryFrom<i32> for EventNumber {
+    type Error = ();
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
+        if (value % 2) == 0 {
+            Ok(EventNumber(value))
+        } else {
+            Err(())
+        }
+    }
+}
+
+#[derive(Debug)]
+struct Circle {
+    radius: usize,
+}
+
+use std::fmt;
+use std::fmt::Formatter;
+
+impl fmt::Display for Circle {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        write!(f, "Circle of radius {}", self.radius)
+    }
+}
+
+use std::str::FromStr;
+
+impl FromStr for Circle {
+    type Err = ();
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(Circle {
+            radius: s.parse::<usize>().unwrap(),
+        })
+    }
+}
+
+use std::vec;
+
+#[allow(overflowing_literals)]
+fn test_type_misc() {
+    //casting
+    let a_float = 3.1415;
+    //let a_integer: i8 = a_float;//we cannot directly cast to different types,no implicit conversion
+    let a_integer = a_float as i8; //this is ok,we explicit the type
+                                   //let a_character = a_float as char;//invalid cast,cannot directly cast float/double to char.
+                                   //when casting any value to unsigned type,make fits into the new type
+    println!("1234 as u8->{}", 1234 as u8); //like 1234%256 in c language
+                                            //but when significant is 1,it get truncated
+    println!("-2 as u8->{}", (-2i8) as u8);
+    //when casting to a signed type,if the significant bit is 1,then value is negative
+    println!("128 as i8->{}", 128 as i8);
+    //saturating casting.when casting from float to int,if the float exceeds the upper bound or lower bound,then value is the bound value
+    println!("300.12 as u8->{}", 300.12_f32 as u8); //255
+    println!("-100.22 as u8->{}", -100.22_f32 as u8); //0;
+                                                      //use unsafe methods to make a real casting,but the value might overflow or return "unsound value",be careful to use.
+    unsafe {
+        println!("300.12 as u8->{}", 300.12_f32.to_int_unchecked::<u8>());
+        println!("-100.22 as u8->{}", (-100.22_f32).to_int_unchecked::<u8>());
+    }
+
+    //literals
+    let i = 0;
+    let x = 1u8;
+    let y = 2u32;
+    let z = 3_f32;
+    let j = 4.0;
+    println!("sizeof i: {:?}", std::mem::size_of_val(&i));
+    println!("sizeof x: {:?}", std::mem::size_of_val(&x));
+    println!("sizeof y: {:?}", std::mem::size_of_val(&y));
+    println!("sizeof z: {:?}", std::mem::size_of_val(&z));
+    println!("sizeof j: {:?}", std::mem::size_of_val(&j));
+
+    //inference
+    let element = 1u8;
+    let mut vec = Vec::new(); //no type declared
+    vec.push(element); //here vec can inferred the type
+    println!("vec: {:?}", vec);
+
+    //aliasing type
+    type Integer = i32;
+    let alia_int: Integer = 1; //we can use the aliasing type
+
+    //custom type casting,which implement std::convert::From trait
+    let org_str = "string";
+    let org_string = String::from(org_str);
+
+    let num_from = Numbers::from(10);
+    println!("num_to: {:?}", num_from);
+    let num = 3;
+    //into function is the reciprocal function of from
+    let num_into: Numbers = num.into(); //must specific the type
+    println!("num_into:{:?}", num_into);
+
+    //try_from
+    assert_eq!(EventNumber::try_from(6), Ok(EventNumber(6)));
+    assert_eq!(EventNumber::try_from(3), Err(()));
+    let result: Result<EventNumber, ()> = 8_i32.try_into();
+    assert_eq!(result, Ok(EventNumber(8)));
+    let result: Result<EventNumber, ()> = 3i32.try_into();
+    assert_eq!(result, Err(()));
+
+    //convert to string,implement fmt trait
+    let circle = Circle { radius: 1 };
+    println!("{}", circle.to_string());
+    //parse a String
+    let num: i32 = "2".parse().unwrap();
+    let num_spec = "3".parse::<i32>().unwrap(); //specific type
+    let circle: Circle = "4".parse::<Circle>().unwrap();
+    println!("circle: {:?}", circle);
+}
+
 fn main() {
     test_data_types();
     test_variable_bindings();
+    test_type_misc();
 
     println!("Hello, world!");
 }
